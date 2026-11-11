@@ -87,6 +87,7 @@ fun StandByScreen(
                             color = contentColor,
                             secondaryColor = secondaryColor,
                             dimmed = dimmed,
+                            size = if (hasCalendar) 290.dp else 340.dp,
                         )
                     }
                     Prefs.CLOCK_FLOAT -> {
@@ -97,15 +98,19 @@ fun StandByScreen(
                         )
                     }
                     else -> {
-                        Clock(time = now, color = contentColor)
+                        Clock(
+                            time = now,
+                            color = contentColor,
+                            isFullscreen = !hasCalendar,
+                        )
                     }
                 }
                 if (clockStyle != Prefs.CLOCK_FLOAT || hasCalendar) {
-                    Spacer(modifier = Modifier.height(14.dp))
+                    Spacer(modifier = Modifier.height(if (hasCalendar) 14.dp else 18.dp))
                     Text(
                         text = now.toLocalDate().format(dateFormatter),
                         color = secondaryColor,
-                        fontSize = 18.sp,
+                        fontSize = if (hasCalendar) 18.sp else 21.sp,
                         fontFamily = SFProFontFamily,
                         fontWeight = FontWeight.Normal,
                         letterSpacing = 0.5.sp,
@@ -156,12 +161,12 @@ fun StandByScreen(
 }
 
 @Composable
-private fun Clock(time: LocalDateTime, color: Color) {
+private fun Clock(time: LocalDateTime, color: Color, isFullscreen: Boolean = false) {
     val pattern = if (rememberIs24HourFormat()) "HH:mm" else "h:mm"
     Text(
         text = time.format(DateTimeFormatter.ofPattern(pattern)),
         color = color,
-        fontSize = 175.sp,
+        fontSize = if (isFullscreen) 215.sp else 170.sp,
         fontFamily = SFProFontFamily,
         fontWeight = FontWeight.Bold,
     )

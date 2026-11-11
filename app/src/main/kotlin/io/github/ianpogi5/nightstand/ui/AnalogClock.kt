@@ -36,10 +36,11 @@ fun AnalogClock(
 ) {
     val textMeasurer = rememberTextMeasurer()
     val orangeAccent = if (dimmed) Color(0xFFB35900) else Color(0xFFFF9F0A)
+    val isLarge = size > 300.dp
     val numberStyle = TextStyle(
         fontFamily = SFProFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = 17.sp,
+        fontSize = if (isLarge) 21.sp else 17.sp,
         color = color,
     )
 
