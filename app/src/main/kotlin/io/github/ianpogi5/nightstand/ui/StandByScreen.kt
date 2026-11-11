@@ -87,7 +87,7 @@ fun StandByScreen(
                             color = contentColor,
                             secondaryColor = secondaryColor,
                             dimmed = dimmed,
-                            size = if (hasCalendar) 290.dp else 340.dp,
+                            size = if (hasCalendar) 290.dp else 400.dp,
                         )
                     }
                     Prefs.CLOCK_FLOAT -> {
@@ -105,7 +105,7 @@ fun StandByScreen(
                         )
                     }
                 }
-                if (clockStyle != Prefs.CLOCK_FLOAT || hasCalendar) {
+                if ((clockStyle != Prefs.CLOCK_FLOAT && clockStyle != Prefs.CLOCK_ANALOG) || hasCalendar) {
                     Spacer(modifier = Modifier.height(if (hasCalendar) 14.dp else 18.dp))
                     Text(
                         text = now.toLocalDate().format(dateFormatter),

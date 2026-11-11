@@ -36,17 +36,17 @@ fun AnalogClock(
 ) {
     val textMeasurer = rememberTextMeasurer()
     val orangeAccent = if (dimmed) Color(0xFFB35900) else Color(0xFFFF9F0A)
-    val isLarge = size > 300.dp
     val numberStyle = TextStyle(
         fontFamily = SFProFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = if (isLarge) 21.sp else 17.sp,
+        fontSize = if (size >= 350.dp) 25.sp else if (size > 300.dp) 21.sp else 17.sp,
         color = color,
     )
 
     Canvas(modifier = Modifier.size(size)) {
         val radius = min(this.size.width, this.size.height) / 2f
         val center = Offset(this.size.width / 2f, this.size.height / 2f)
+        val scale = radius / (145.dp.toPx())
 
         // 1. Draw 60 ticks around the outer rim
         for (i in 0 until 60) {
@@ -56,7 +56,7 @@ fun AnalogClock(
 
             val tickStart = if (isHour) radius * 0.90f else radius * 0.94f
             val tickEnd = radius * 0.99f
-            val tickWidth = if (isHour) 3.5f else 1.8f
+            val tickWidth = (if (isHour) 3.5f else 1.8f) * scale
             val tickColor = if (isHour) color else secondaryColor.copy(alpha = 0.55f)
 
             drawLine(
@@ -105,7 +105,7 @@ fun AnalogClock(
             color = color,
             start = center - hourDir * (radius * 0.08f),
             end = center + hourDir * (radius * 0.52f),
-            strokeWidth = 9.5f,
+            strokeWidth = 9.5f * scale,
             cap = StrokeCap.Round,
         )
 
@@ -115,13 +115,13 @@ fun AnalogClock(
             color = color,
             start = center - minuteDir * (radius * 0.08f),
             end = center + minuteDir * (radius * 0.80f),
-            strokeWidth = 6.5f,
+            strokeWidth = 6.5f * scale,
             cap = StrokeCap.Round,
         )
 
         // Center cap ring
-        drawCircle(color = Color.Black, radius = 7f, center = center)
-        drawCircle(color = color, radius = 5.5f, center = center)
+        drawCircle(color = Color.Black, radius = 7f * scale, center = center)
+        drawCircle(color = color, radius = 5.5f * scale, center = center)
 
         // 4. Second Hand (Signature iOS orange hand with counterweight)
         val secondDir = Offset(sin(secondAngle).toFloat(), -cos(secondAngle).toFloat())
@@ -129,12 +129,12 @@ fun AnalogClock(
             color = orangeAccent,
             start = center - secondDir * (radius * 0.20f), // counterweight
             end = center + secondDir * (radius * 0.88f),
-            strokeWidth = 2.2f,
+            strokeWidth = 2.2f * scale,
             cap = StrokeCap.Round,
         )
 
         // Orange center pivot
-        drawCircle(color = orangeAccent, radius = 4.5f, center = center)
-        drawCircle(color = Color.Black, radius = 1.8f, center = center)
+        drawCircle(color = orangeAccent, radius = 4.5f * scale, center = center)
+        drawCircle(color = Color.Black, radius = 1.8f * scale, center = center)
     }
 }
