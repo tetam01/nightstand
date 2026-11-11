@@ -87,7 +87,7 @@ fun StandByScreen(
                             color = contentColor,
                             secondaryColor = secondaryColor,
                             dimmed = dimmed,
-                            size = if (hasCalendar) 290.dp else 400.dp,
+                            size = if (hasCalendar) 290.dp else 330.dp,
                         )
                     }
                     Prefs.CLOCK_FLOAT -> {
@@ -105,12 +105,12 @@ fun StandByScreen(
                         )
                     }
                 }
-                if ((clockStyle != Prefs.CLOCK_FLOAT && clockStyle != Prefs.CLOCK_ANALOG) || hasCalendar) {
-                    Spacer(modifier = Modifier.height(if (hasCalendar) 14.dp else 18.dp))
+                if (clockStyle != Prefs.CLOCK_FLOAT || hasCalendar) {
+                    Spacer(modifier = Modifier.height(if (hasCalendar) 12.dp else 10.dp))
                     Text(
                         text = now.toLocalDate().format(dateFormatter),
                         color = secondaryColor,
-                        fontSize = if (hasCalendar) 18.sp else 21.sp,
+                        fontSize = if (hasCalendar) 18.sp else 19.sp,
                         fontFamily = SFProFontFamily,
                         fontWeight = FontWeight.Normal,
                         letterSpacing = 0.5.sp,
@@ -166,7 +166,7 @@ private fun Clock(time: LocalDateTime, color: Color, isFullscreen: Boolean = fal
     Text(
         text = time.format(DateTimeFormatter.ofPattern(pattern)),
         color = color,
-        fontSize = if (isFullscreen) 215.sp else 170.sp,
+        fontSize = if (isFullscreen) 260.sp else 185.sp,
         fontFamily = SFProFontFamily,
         fontWeight = FontWeight.Bold,
     )

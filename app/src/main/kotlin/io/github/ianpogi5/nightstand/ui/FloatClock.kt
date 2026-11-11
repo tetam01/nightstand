@@ -41,10 +41,10 @@ fun FloatClock(
     val hourStr = parts.getOrNull(0) ?: "9"
     val minuteStr = parts.getOrNull(1) ?: "41"
 
-    val fontSize: TextUnit = if (isSideBySide) 130.sp else 215.sp
-    val dotSize: Dp = if (isSideBySide) 16.dp else 26.dp
-    val dotSpacing: Dp = if (isSideBySide) 18.dp else 28.dp
-    val colonPadding: Dp = if (isSideBySide) 6.dp else 12.dp
+    val fontSize: TextUnit = if (isSideBySide) 140.sp else 280.sp
+    val dotSize: Dp = if (isSideBySide) 18.dp else 34.dp
+    val dotSpacing: Dp = if (isSideBySide) 20.dp else 38.dp
+    val colonPadding: Dp = if (isSideBySide) 8.dp else 16.dp
 
     // Color palette matching iOS 17 Float
     val pinkColor = if (dimmed) Color(0xFF6E2842) else Color(0xFFE56997)

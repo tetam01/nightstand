@@ -39,7 +39,7 @@ fun AnalogClock(
     val numberStyle = TextStyle(
         fontFamily = SFProFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = if (size >= 350.dp) 25.sp else if (size > 300.dp) 21.sp else 17.sp,
+        fontSize = if (size >= 320.dp) 21.sp else 17.sp,
         color = color,
     )
 
