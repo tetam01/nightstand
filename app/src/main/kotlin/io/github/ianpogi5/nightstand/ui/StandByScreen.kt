@@ -118,14 +118,19 @@ fun StandByScreen(
                 }
             }
             if (calendarStyle == Prefs.CALENDAR_MONTH) {
-                Spacer(modifier = Modifier.width(130.dp))
+                val spacerWidth = when (clockStyle) {
+                    Prefs.CLOCK_DIGITAL -> 70.dp
+                    Prefs.CLOCK_FLOAT -> 80.dp
+                    else -> 90.dp
+                }
+                Spacer(modifier = Modifier.width(spacerWidth))
                 MonthCalendar(
                     today = now.toLocalDate(),
                     events = events,
                     dimmed = dimmed,
                 )
             } else if (calendarStyle == Prefs.CALENDAR_LIST && events.isNotEmpty()) {
-                Spacer(modifier = Modifier.width(100.dp))
+                Spacer(modifier = Modifier.width(60.dp))
                 CalendarColumn(
                     events = events,
                     dimmed = dimmed,
@@ -166,7 +171,7 @@ private fun Clock(time: LocalDateTime, color: Color, isFullscreen: Boolean = fal
     Text(
         text = time.format(DateTimeFormatter.ofPattern(pattern)),
         color = color,
-        fontSize = if (isFullscreen) 260.sp else 185.sp,
+        fontSize = if (isFullscreen) 260.sp else 155.sp,
         fontFamily = SFProFontFamily,
         fontWeight = FontWeight.Bold,
     )
