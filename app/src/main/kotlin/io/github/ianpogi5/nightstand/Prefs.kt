@@ -38,7 +38,7 @@ object Prefs {
         prefs(context).edit { putBoolean(KEY_AUTO_LAUNCH, value) }
 
     fun landscapeOnly(context: Context): Boolean =
-        prefs(context).getBoolean(KEY_LANDSCAPE_ONLY, true)
+        prefs(context).getBoolean(KEY_LANDSCAPE_ONLY, false)
 
     fun setLandscapeOnly(context: Context, value: Boolean) =
         prefs(context).edit { putBoolean(KEY_LANDSCAPE_ONLY, value) }

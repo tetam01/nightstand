@@ -31,7 +31,7 @@
         <activity
             android:name=".StandByActivity"
             android:exported="true"
-            android:screenOrientation="landscape"
+            android:screenOrientation="fullUser"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:showWhenLocked="true"
             android:turnScreenOn="true">

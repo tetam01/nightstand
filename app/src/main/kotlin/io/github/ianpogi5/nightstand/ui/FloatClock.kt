@@ -32,6 +32,7 @@ fun FloatClock(
     time: LocalDateTime,
     dimmed: Boolean,
     isSideBySide: Boolean = false,
+    isPortrait: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
     val is24Hour = rememberIs24HourFormat()
@@ -41,10 +42,14 @@ fun FloatClock(
     val hourStr = parts.getOrNull(0) ?: "9"
     val minuteStr = parts.getOrNull(1) ?: "41"
 
-    val fontSize: TextUnit = if (isSideBySide) 140.sp else 280.sp
-    val dotSize: Dp = if (isSideBySide) 18.dp else 34.dp
-    val dotSpacing: Dp = if (isSideBySide) 20.dp else 38.dp
-    val colonPadding: Dp = if (isSideBySide) 8.dp else 16.dp
+    val fontSize: TextUnit = if (isPortrait) {
+        if (isSideBySide) 115.sp else 145.sp
+    } else {
+        if (isSideBySide) 140.sp else 280.sp
+    }
+    val dotSize: Dp = if (isPortrait) 14.dp else if (isSideBySide) 18.dp else 34.dp
+    val dotSpacing: Dp = if (isPortrait) 16.dp else if (isSideBySide) 20.dp else 38.dp
+    val colonPadding: Dp = if (isPortrait) 6.dp else if (isSideBySide) 8.dp else 16.dp
 
     // Color palette matching iOS 17 Float
     val pinkColor = if (dimmed) Color(0xFF6E2842) else Color(0xFFE56997)

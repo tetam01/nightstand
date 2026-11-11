@@ -2,6 +2,7 @@ package io.github.ianpogi5.nightstand.ui
 
 import android.Manifest
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
@@ -42,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
@@ -156,16 +158,12 @@ fun SetupSheet(
             }
 
             // Scrollable Content
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(24.dp),
-            ) {
-                // Left Column: Display & Styles
+            val isPortrait = LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
+
+            @Composable
+            fun DisplaySettings(modifier: Modifier = Modifier) {
                 Column(
-                    modifier = Modifier.weight(1f),
+                    modifier = modifier,
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     SettingsCard(title = "Uhren-Stil") {
@@ -270,10 +268,12 @@ fun SetupSheet(
                         }
                     }
                 }
+            }
 
-                // Right Column: System & Triggers
+            @Composable
+            fun SystemSettings(modifier: Modifier = Modifier) {
                 Column(
-                    modifier = Modifier.weight(1f),
+                    modifier = modifier,
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     SettingsCard(title = "Verhalten beim Laden") {
@@ -378,6 +378,30 @@ fun SetupSheet(
                             )
                         }
                     }
+                }
+            }
+
+            if (isPortrait) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+                    DisplaySettings()
+                    SystemSettings()
+                }
+            } else {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(24.dp),
+                ) {
+                    DisplaySettings(modifier = Modifier.weight(1f))
+                    SystemSettings(modifier = Modifier.weight(1f))
                 }
             }
         }
