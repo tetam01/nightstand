@@ -14,18 +14,21 @@ import java.time.LocalDateTime
 import kotlinx.coroutines.delay
 
 /**
- * Current wall-clock time, updated on each minute boundary while the
- * lifecycle is at least STARTED (no ticking with the screen off).
+ * Current wall-clock time. Updates every second when [withSeconds] is true
+ * (e.g. for the analog clock's second hand), or on each minute boundary
+ * for the digital clock.
  */
 @Composable
-fun rememberMinuteTime(): State<LocalDateTime> {
+fun rememberMinuteTime(withSeconds: Boolean = false): State<LocalDateTime> {
     val lifecycleOwner = LocalLifecycleOwner.current
     val time = remember { mutableStateOf(LocalDateTime.now()) }
-    LaunchedEffect(lifecycleOwner) {
+    LaunchedEffect(lifecycleOwner, withSeconds) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             while (true) {
                 time.value = LocalDateTime.now()
-                delay(60_000L - System.currentTimeMillis() % 60_000L)
+                val interval = if (withSeconds) 1000L else 60_000L
+                val nextDelay = interval - (System.currentTimeMillis() % interval)
+                delay(if (nextDelay > 0) nextDelay else interval)
             }
         }
     }

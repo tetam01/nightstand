@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -40,10 +41,12 @@ fun StandByScreen(
     onToggleDim: () -> Unit,
     hasCalendarPermission: Boolean,
     clockStyle: String,
+    calendarStyle: String,
     hiddenCalendars: Set<Long>,
     onOpenSetup: () -> Unit,
 ) {
-    val now by rememberMinuteTime()
+    val isAnalog = (clockStyle == Prefs.CLOCK_ANALOG)
+    val now by rememberMinuteTime(withSeconds = isAnalog)
     val battery = rememberBatteryStatus()
     val events = rememberTodayEvents(now, hasCalendarPermission, hiddenCalendars)
 
@@ -57,6 +60,8 @@ fun StandByScreen(
 
     val contentColor = if (dimmed) Color(0xFF8A8A8A) else Color(0xFFEDEDED)
     val secondaryColor = if (dimmed) Color(0xFF565656) else Color(0xFF9A9A9A)
+
+    val hasCalendar = (calendarStyle == Prefs.CALENDAR_MONTH || (calendarStyle == Prefs.CALENDAR_LIST && events.isNotEmpty()))
 
     Box(
         modifier = Modifier
@@ -75,24 +80,47 @@ fun StandByScreen(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                if (clockStyle == Prefs.CLOCK_ANALOG) {
-                    AnalogClock(
-                        time = now,
-                        color = contentColor,
-                        secondaryColor = secondaryColor,
-                    )
-                } else {
-                    Clock(time = now, color = contentColor)
+                when (clockStyle) {
+                    Prefs.CLOCK_ANALOG -> {
+                        AnalogClock(
+                            time = now,
+                            color = contentColor,
+                            secondaryColor = secondaryColor,
+                            dimmed = dimmed,
+                        )
+                    }
+                    Prefs.CLOCK_FLOAT -> {
+                        FloatClock(
+                            time = now,
+                            dimmed = dimmed,
+                            isSideBySide = hasCalendar,
+                        )
+                    }
+                    else -> {
+                        Clock(time = now, color = contentColor)
+                    }
                 }
-                Text(
-                    text = now.toLocalDate().format(dateFormatter),
-                    color = secondaryColor,
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.Light,
-                )
+                if (clockStyle != Prefs.CLOCK_FLOAT || hasCalendar) {
+                    Spacer(modifier = Modifier.height(14.dp))
+                    Text(
+                        text = now.toLocalDate().format(dateFormatter),
+                        color = secondaryColor,
+                        fontSize = 18.sp,
+                        fontFamily = SFProFontFamily,
+                        fontWeight = FontWeight.Normal,
+                        letterSpacing = 0.5.sp,
+                    )
+                }
             }
-            if (events.isNotEmpty()) {
-                Spacer(modifier = Modifier.width(72.dp))
+            if (calendarStyle == Prefs.CALENDAR_MONTH) {
+                Spacer(modifier = Modifier.width(130.dp))
+                MonthCalendar(
+                    today = now.toLocalDate(),
+                    events = events,
+                    dimmed = dimmed,
+                )
+            } else if (calendarStyle == Prefs.CALENDAR_LIST && events.isNotEmpty()) {
+                Spacer(modifier = Modifier.width(100.dp))
                 CalendarColumn(
                     events = events,
                     dimmed = dimmed,
@@ -103,10 +131,10 @@ fun StandByScreen(
 
         BatteryIndicator(
             status = battery,
-            color = secondaryColor,
+            dimmed = dimmed,
             modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(32.dp)
+                .align(Alignment.TopEnd)
+                .padding(top = 24.dp, end = 28.dp)
                 .offset { IntOffset(shift.x.dp.roundToPx(), shift.y.dp.roundToPx()) },
         )
 
@@ -133,7 +161,8 @@ private fun Clock(time: LocalDateTime, color: Color) {
     Text(
         text = time.format(DateTimeFormatter.ofPattern(pattern)),
         color = color,
-        fontSize = 170.sp,
-        fontWeight = FontWeight.Thin,
+        fontSize = 175.sp,
+        fontFamily = SFProFontFamily,
+        fontWeight = FontWeight.Bold,
     )
 }

@@ -61,6 +61,7 @@ class StandByActivity : ComponentActivity() {
             var settingsRev by rememberSaveable { mutableStateOf(0) }
             val nightBrightness = remember(settingsRev) { Prefs.nightBrightness(this) }
             val clockStyle = remember(settingsRev) { Prefs.clockStyle(this) }
+            val calendarStyle = remember(settingsRev) { Prefs.calendarStyle(this) }
             val hiddenCalendars = remember(settingsRev) { Prefs.hiddenCalendars(this) }
 
             var nightDim by rememberSaveable { mutableStateOf(true) }
@@ -89,30 +90,25 @@ class StandByActivity : ComponentActivity() {
             var showSetup by rememberSaveable { mutableStateOf(!Prefs.setupShown(this)) }
 
             Box(modifier = Modifier.fillMaxSize()) {
-                StandByScreen(
-                    dimmed = nightDim,
-                    onToggleDim = { nightDim = !nightDim },
-                    hasCalendarPermission = hasCalendarPermission,
-                    clockStyle = clockStyle,
-                    hiddenCalendars = hiddenCalendars,
-                    onOpenSetup = { showSetup = true },
-                )
                 if (showSetup) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color(0x99000000)),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        SetupSheet(
-                            hasCalendarPermission = hasCalendarPermission,
-                            onSettingsChanged = { settingsRev++ },
-                            onDismiss = {
-                                showSetup = false
-                                Prefs.setSetupShown(this@StandByActivity)
-                            },
-                        )
-                    }
+                    SetupSheet(
+                        hasCalendarPermission = hasCalendarPermission,
+                        onSettingsChanged = { settingsRev++ },
+                        onDismiss = {
+                            showSetup = false
+                            Prefs.setSetupShown(this@StandByActivity)
+                        },
+                    )
+                } else {
+                    StandByScreen(
+                        dimmed = nightDim,
+                        onToggleDim = { nightDim = !nightDim },
+                        hasCalendarPermission = hasCalendarPermission,
+                        clockStyle = clockStyle,
+                        calendarStyle = calendarStyle,
+                        hiddenCalendars = hiddenCalendars,
+                        onOpenSetup = { showSetup = true },
+                    )
                 }
             }
         }

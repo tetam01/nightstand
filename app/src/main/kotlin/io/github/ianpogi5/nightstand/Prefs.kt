@@ -17,10 +17,16 @@ object Prefs {
     private const val KEY_SETUP_SHOWN = "setup_shown"
     private const val KEY_NIGHT_BRIGHTNESS = "night_brightness"
     private const val KEY_CLOCK_STYLE = "clock_style"
+    private const val KEY_CALENDAR_STYLE = "calendar_style"
     private const val KEY_HIDDEN_CALENDARS = "hidden_calendars"
 
     const val CLOCK_DIGITAL = "digital"
     const val CLOCK_ANALOG = "analog"
+    const val CLOCK_FLOAT = "float"
+
+    const val CALENDAR_MONTH = "month"
+    const val CALENDAR_LIST = "list"
+    const val CALENDAR_NONE = "none"
 
     private fun prefs(context: Context): SharedPreferences =
         context.getSharedPreferences(FILE, Context.MODE_PRIVATE)
@@ -54,6 +60,12 @@ object Prefs {
 
     fun setClockStyle(context: Context, value: String) =
         prefs(context).edit { putString(KEY_CLOCK_STYLE, value) }
+
+    fun calendarStyle(context: Context): String =
+        prefs(context).getString(KEY_CALENDAR_STYLE, CALENDAR_MONTH) ?: CALENDAR_MONTH
+
+    fun setCalendarStyle(context: Context, value: String) =
+        prefs(context).edit { putString(KEY_CALENDAR_STYLE, value) }
 
     fun hiddenCalendars(context: Context): Set<Long> =
         prefs(context).getStringSet(KEY_HIDDEN_CALENDARS, emptySet())
